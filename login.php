@@ -31,7 +31,7 @@
                                             </div>
                                             <div class="col-12">
                                                 <label for="login-username">E-mail</label>
-                                                <input type="text" class="form-control" id="email" name="email">
+                                                <input type="text" class="form-control" id="myemail" name="myemail">
                                             </div>
                                         </div>
                                         <div class="form-group row">
