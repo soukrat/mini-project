@@ -17,7 +17,7 @@
 .nav-tabs {
     min-height:100vh;
     left:0;
-    width:200px;
+    width:90px;
     transition: all 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
     will-change: left, width;
     box-shadow: inset -1px 0 10px rgba(0, 0, 0, 0.4);
@@ -30,13 +30,6 @@
 .nav-tabs li a {
     color:#fff;
     display:block;
-}
-.nav-tabs li i {
-    float:left;
-    color:grey;
-    margin-left:-58px;
-    font-size:24px;
-    padding-left:7px;
 }
 .nav-tabs li:hover {
     background:#167696;
@@ -63,6 +56,16 @@
 
 .nav-tabs li { cursor:pointer; }
 
+
+#showdata input{
+	color: #fff;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+#showdata textarea{
+	color: #fff;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
     </style>
 
 </head>
@@ -80,7 +83,7 @@
 	</nav>
 
 		<div class="row">
-    	<div class="col-md-2">
+    	<div class="col-md-1">
 		        <ul class="nav nav-tabs">
 		            <li class="active"><i class="fa fa-arrows"></i><a data-toggle="tab" href="#Store" role="tab">Store</a></li>
 		            <li><i class="fa fa-battery-2"></i><a data-toggle="tab" href="#Users" role="tab">Users</a></li>
@@ -90,25 +93,27 @@
 		</div>
 		
 
-		<div class="col-md-10">
+		<div class="col-md-11">
 		<div class="tab-content">
                                      
 				    <div role="tabpanel" class="tab-pane active" role="tabpanel" id="Store">
 
 				    <div class="row">
 
-				    	<div id="formstandar" class="col-4 shadow p-3 mb-5 rounded" style="background-color: #28a745; margin-top: 2%;">
+				    	<div id="formstandar" class="col-4" style="margin-top: 2%;">
+				    	<div class="shadow p-3 mb-5 rounded" style="background-color: #28a745;">
 				    		<div class="form-group row mb-3">
-                                <div class="col-12 text-center push" style="margin-top: 34%;margin-bottom: 34%;">
+                                <div class="col-12 text-center push" style="margin-top: 35%;margin-bottom: 35%;">
                                     <button type="button" onclick="change()" class="btn btn-info" style="padding-left: 10%;padding-right: 10%;border: 1px solid;">
                                         <i class="fa fa-plus"></i>
                                     </button>
                                 </div>
                             </div>
 				    	</div>
+				    	</div>
 
-
-					<div id="forminsert" class="col-4 shadow p-3 mb-5 rounded" style="background-color: rgb(248, 249, 250); margin-top: 2%;">
+				    <div  id="forminsert" class="col-4" style="margin-top: 2%;">
+					<div class="shadow p-3 mb-5 rounded" style="background-color: rgb(248, 249, 250);">
 						<form class="" method="POST" action="connect.php" enctype="multipart/form-data">
                         <div class="block block-themed block-rounded block-shadow">
           
@@ -118,8 +123,7 @@
                                         </button>
                                     
                             </div>
-                        
-                            <div class="block-content" style="margin-top: -8%;margin-bottom: -7%;">
+                            <div class="block-content" style="margin-top: -5%;margin-bottom: -5%;">
                             	 <div class="form-group row">
                                     <div class="col-12">
                                         <input type="text" class="form-control" id="Nom" name="Nom" placeholder="Nom">
@@ -137,24 +141,105 @@
                                 </div>
                                 <div class="form-group row">
                                             <div class="col-12 text-left push">
-                                                <button type="button" class="btn btn-secondary">
-                                                    choose file
-                                                </button>
+                                            	<input type="file" class="form-control">
                                             </div>
-                                        </div>
-                                 <div class="form-group row">
+                                </div>
+                                <div class="form-group row">
                                     <div class="col-6">
                                         <input type="text" class="form-control" id="prix" name="prix" placeholder="Prix">
                                     </div>
-                                
                                     <div class="col-6">
                                         <input type="text" class="form-control" id="nmbcomp" name="nmbcomp" placeholder="Nombre copie">
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </form>
+                    	</form>
 					</div>
+					</div>
+
+					<!-- form store -->
+					<div class="col-4" style="margin-top: 2%;">
+					<div class="shadow p-3 rounded" style="background-image: url('img/img1.jpg');height: 88%;">
+						<form id="showdata" method="POST" action="connect.php" enctype="multipart/form-data">
+                        <div class="block block-themed block-rounded block-shadow">
+          
+                                    <div class="text-right">
+                                        <button type="button" id="btnwarning" onclick="btnedit()" class="btn btn-warning" style="border-radius: 100%;margin-top: -18%;">
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                                     
+                                        <button type="button" id="btnsuccess" onclick="btnsave()" class="btn btn-success" style="border-radius: 100%;margin-top: -18%; ">
+                                            <i class="fa fa-check"></i>
+                                        </button>
+
+                                        <button type="button" onclick="btnremove()" class="btn btn-danger" style="border-radius: 100%;margin-top: -18%;margin-right: -10%;">
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                            		</div>
+
+                             <div id="formsave" class="block-content" style="margin-top: -5%;margin-bottom: -5%;color: #fff">
+                            	 <div class="form-group row">
+                                    <div class="col-12">
+                                    	<label>test</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-6">
+                                    	<label>location</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row" style="margin-bottom: 46%">
+                                    <div class="col-12">
+                                    	<label>description</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row text-center">
+                                    <div class="col-6">
+                                    	<label>20$</label>
+                                    </div>
+                                    <div class="col-6">
+                                    	<label>4</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="formedit" class="block-content" style="margin-top: -5%;margin-bottom: -5%;">
+                            	 <div class="form-group row">
+                                    <div class="col-12">
+                                        <input type="text" class="form-control" id="Nom" name="Nom" placeholder="Nom">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-6">
+                                        <input type="text" class="form-control" id="location" name="location" placeholder="Location">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                    	<textarea class="form-control" rows="4" id="desc" name="desc" placeholder="Description"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                            <div class="col-12 text-left push">
+                                            	<input type="file" id="file" class="form-control">
+                                            </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-6">
+                                        <input type="text" class="form-control" id="prix" name="prix" placeholder="Prix">
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="number" class="form-control" id="nmbcomp" name="nmbcomp" placeholder="Nombre copie">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    	</form>
+					</div>
+					</div>
+					<!-- fin form store-->
+
 					</div>
 
 				
@@ -167,10 +252,7 @@
 				</div>
               
 			  <div role="tabpanel" class="tab-pane" role="tabpanel" id="grades">
-			 	<?php
-				$file ="grades.php";
-				include_once $file;
-				?> 
+			 	
 				</div>
 			</div>
 			</div>
@@ -185,10 +267,34 @@
 		    });
 		});
 
-$("#forminsert").hide();
-		function change(){
-			$("#formstandar").hide();
-			$("#forminsert").show();
+		$("#forminsert").hide();
+			function change(){
+				$("#formstandar").hide();
+				$("#forminsert").show();
+			}
+
+
+		//edite art	
+			$("#btnsuccess").hide();
+			$("#formedit").hide();
+		function btnedit(){
+			$("#btnwarning").hide();
+			$("#btnsuccess").show();
+			$("#formsave").hide();
+			$("#formedit").show();
+		}		
+
+		//save art
+		function btnsave(){
+			$("#btnwarning").show();
+			$("#btnsuccess").hide();
+			$("#formsave").show();
+			$("#formedit").hide();
+		}
+
+		//delet art 
+		function btnremove(){
+
 		}
 
 	</script>    					
