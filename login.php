@@ -1,3 +1,54 @@
+<?php
+     
+    require 'database.php';
+
+    session_start();
+ 
+    if ( !empty($_POST)) {
+        // keep track validation errors SUBSTRING(colName, 1, 1)
+        $nameError = null;
+        $emailError = null;
+        $mobileError = null;
+
+        $valid = true;
+         
+        // keep track post values
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+
+        // insert data
+        if ($valid) {
+            $pdo = Database::connect();
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = "SELECT Id_user,Nom FROM user WHERE Email = '". $email ."' and password = '" .$password."'";
+            $q=$pdo->query($sql);
+            $count = $q->fetch();           
+      
+              // If result matched $myusername and $mypassword, table row must be 1 row
+                
+              if($count != null) {
+                
+                $_SESSION['id_user'] = $count["Id_user"];
+                $_SESSION['name_user'] = $count["Nom"];
+                $_SESSION['email_user'] = $email;
+
+                //print_r($_SESSION['email_user']);exit();
+
+                header("location: store.php");
+              }else {
+                
+                 $error = "Your Login Name or Password is invalid";
+                 
+              }
+
+            Database::disconnect();
+        }
+
+    }
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +66,7 @@
             <div class="col-md-4 col-sm-12 align-center offset-md-4 shadow p-3 mb-5 bg-white rounded" style="background-color: #fff; margin-top: 12%;padding: 3%">
                
                             
-                            <form class="" method="POST" action="connect.php">
+                            <form class="" method="POST" action="">
                                 
 
                                 <div class="block block-themed block-rounded block-shadow">
@@ -26,12 +77,9 @@
                                 
                                     <div class="block-content">
                                         <div class="form-group row">
-                                            <div class="col-md-12">
-                                              
-                                            </div>
                                             <div class="col-12">
                                                 <label for="login-username">E-mail</label>
-                                                <input type="text" class="form-control" id="myemail" name="myemail">
+                                                <input type="text" class="form-control" id="email" name="email" value="<?php echo @$email ?>">
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -39,6 +87,9 @@
                                                 <label for="login-password">Password</label>
                                                 <input type="password" class="form-control" id="password" name="password" >
                                             </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                              <p style="color: red;"><?php echo @$error; ?></p>
                                         </div>
                                         <div class="form-group row mb-0">
                                         

@@ -1,3 +1,79 @@
+<?php
+     session_start();
+if (!empty($_SESSION)) {
+
+    require 'database.php';
+ 
+    if ( !empty($_POST)) {
+        // keep track validation errors
+        $nameError = null;
+        $emailError = null;
+        $mobileError = null;
+         
+        // keep track post values
+        $id_user = $_SESSION['id_user'];
+        $Title = $_POST['Title'];
+        $Location = $_POST['Location'];
+        $Description = $_POST['Description'];
+        $Prix = $_POST['Prix'];
+        $Nombre_copie = $_POST['Nombre_copie'];
+        $target_dir = "img/";
+        $target_path = basename($_FILES["fileToUpload"]["name"]) ;
+        $target_file = $target_dir . $target_path;
+
+
+        $test = "ok";
+
+        // validate input
+        $valid = true;
+        if (empty($Title)) {
+            $TitleError = true;
+            $valid = false;
+        }
+
+        if (empty($Location)) {
+            $LocationError = true;
+            $valid = false;
+        }
+         
+        if (empty($Description)) {
+            $DescriptionError = true;
+            $valid = false;
+        }
+         
+        if (empty($Prix)) {
+            $PrixError = true;
+            $valid = false;
+        }
+         
+        if (empty($Nombre_copie)) {
+            $ncError = true;
+            $valid = false;
+        }
+
+        if (empty($target_path)) {
+            $tpError = true;
+            $valid = false;
+        }
+         
+        // insert data
+        if ($valid) {
+            $pdo = Database::connect();
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = "INSERT INTO monument (id_user,Title,Location,Description,Prix,Nombre_copie,Image) values(?, ?, ?, ?, ?, ?, ?)";
+            $q = $pdo->prepare($sql);
+            $q->execute(array($id_user,$Title,$Location,$Description,$Prix,$Nombre_copie,$target_file));
+            Database::disconnect();
+            header("Location: store.php");
+        }
+    }
+
+
+
+
+
+
+ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,21 +87,21 @@
 
     <style type="text/css">
     	body {
-    box-sizing:border-box;
     background:#354545;
 }
 .nav-tabs {
     min-height:100vh;
-    left:0;
-    width:90px;
     transition: all 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
     will-change: left, width;
     box-shadow: inset -1px 0 10px rgba(0, 0, 0, 0.4);
     background: #293749;
     display: block;
 }
-.nav-tabs li {
-    padding:10px;
+.nav-tabs a {
+    padding:30px;
+}
+.nav-tabs li i {
+    font-size: 120%;
 }
 .nav-tabs li a {
     color:#fff;
@@ -70,27 +146,25 @@
 
 </head>
  
-<body style="background-image: url('img/back.png');">
+<body>
 
 	<nav class="navbar navbar-inverse navbar-light bg-light">
-		<div class="container-fluid">
-	  <a class="navbar-brand" href="#">Mini prject</a>
+	<div class="container-fluid">
+	  <a class="navbar-brand" href="#">Welcome <?php echo $_SESSION['name_user']; ?></a>
 
 	  <ul class="nav navbar-nav navbar-right">
-      <li><a href="#"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+      <li><a href="logout.php"><i  style="font-size: 170%;" class="fa fa-sign-out"></i></a></li>
     	</ul>
     </div>
 	</nav>
 
+		<div class="container-fluid">
 		<div class="row">
-    	<div class="col-md-1">
 		        <ul class="nav nav-tabs">
-		            <li class="active"><i class="fa fa-arrows"></i><a data-toggle="tab" href="#Store" role="tab">Store</a></li>
-		            <li><i class="fa fa-battery-2"></i><a data-toggle="tab" href="#Users" role="tab">Users</a></li>
-		            <li><i class="fa fa-bell"></i><a data-toggle="tab" href="#" role="tab">bell</a></li>
-		            <li><i class="fa fa-bicycle"></i><a data-toggle="tab" href="#" role="tab">Disconnect</a></li>
+		            <li class="active"><a data-toggle="tab" href="#Store" role="tab"><i class="fa fa-shopping-bag"></i></a></li>
+		            <li><a data-toggle="tab" href="#Users" role="tab"><i class="fa fa-user"></i></a></li>
+		            <li><a href="logout.php" ><i class="fa fa-sign-out"></i></a></li>
 		        </ul>
-		</div>
 		
 
 		<div class="col-md-11">
@@ -114,7 +188,7 @@
 
 				    <div  id="forminsert" class="col-4" style="margin-top: 2%;">
 					<div class="shadow p-3 mb-5 rounded" style="background-color: rgb(248, 249, 250);">
-						<form class="" method="POST" action="connect.php" enctype="multipart/form-data">
+						<form class="" method="POST" action="" enctype="multipart/form-data">
                         <div class="block block-themed block-rounded block-shadow">
           
                                     <div class="text-right">
@@ -126,30 +200,30 @@
                             <div class="block-content" style="margin-top: -5%;margin-bottom: -5%;">
                             	 <div class="form-group row">
                                     <div class="col-12">
-                                        <input type="text" class="form-control" id="Nom" name="Nom" placeholder="Nom">
+                                        <input type="text" class="form-control <?php if(@$TitleError){ echo 'is-invalid'; } ?>" id="Title" name="Title" placeholder="Title" value="<?php echo @$_POST['Title'] ?>">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-6">
-                                        <input type="text" class="form-control" id="location" name="location" placeholder="Location">
+                                        <input type="text" class="form-control <?php if(@$LocationError){ echo 'is-invalid'; } ?>" id="Location" name="Location" placeholder="Location" value="<?php echo @$_POST['Location'] ?>">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-12">
-                                    	<textarea class="form-control" rows="4" id="desc" name="desc" placeholder="Description"></textarea>
+                                    	<textarea class="form-control <?php if(@$DescriptionError){ echo 'is-invalid'; } ?>" rows="4" id="Description" name="Description" placeholder="Description"><?php echo @$_POST['Description'] ?></textarea>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                             <div class="col-12 text-left push">
-                                            	<input type="file" class="form-control">
+                                            	<input type="file" class="form-control <?php if(@$tpError){ echo 'is-invalid'; } ?>" name="fileToUpload">
                                             </div>
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-6">
-                                        <input type="text" class="form-control" id="prix" name="prix" placeholder="Prix">
+                                        <input type="text" class="form-control <?php if(@$PrixError){ echo 'is-invalid'; } ?>" id="Prix" name="Prix" placeholder="Prix: $" value="<?php echo @$_POST['Prix'] ?>">
                                     </div>
                                     <div class="col-6">
-                                        <input type="text" class="form-control" id="nmbcomp" name="nmbcomp" placeholder="Nombre copie">
+                                        <input type="number" class="form-control <?php if(@$ncError){ echo 'is-invalid'; } ?>" id="Nombre_copie" name="Nombre_copie" placeholder="Nombre copie" value="<?php echo @$_POST['Nombre_copie'] ?>">
                                     </div>
                                 </div>
                             </div>
@@ -158,10 +232,21 @@
 					</div>
 					</div>
 
+
+<?php
+                   
+                   $pdo = Database::connect();
+                   $sqlstore = 'SELECT * FROM monument';
+                   $qs=$pdo->query($sqlstore);
+                   foreach ($qs as $row) {
+                  ?>
+
+
 					<!-- form store -->
 					<div class="col-4" style="margin-top: 2%;">
-					<div class="shadow p-3 rounded" style="background-image: url('img/img1.jpg');height: 88%;">
-						<form id="showdata" method="POST" action="connect.php" enctype="multipart/form-data">
+					
+						<form id="showdata" method="POST" action="" enctype="multipart/form-data">
+                            <div class="shadow p-3 rounded" style="background-image: url('<?php print $row['Image'] ?>');background-size: 140%; background-repeat: no-repeat;">
                         <div class="block block-themed block-rounded block-shadow">
           
                                     <div class="text-right">
@@ -169,37 +254,38 @@
                                             <i class="fa fa-pencil"></i>
                                         </button>
                                      
-                                        <button type="button" id="btnsuccess" onclick="btnsave()" class="btn btn-success" style="border-radius: 100%;margin-top: -18%; ">
+                                        <button type="button" onclick="savechange(<?php print $row['id_mon'] ?>)" id="btnsuccess" class="btn btn-success" style="border-radius: 100%;margin-top: -18%; ">
                                             <i class="fa fa-check"></i>
                                         </button>
 
-                                        <button type="button" onclick="btnremove()" class="btn btn-danger" style="border-radius: 100%;margin-top: -18%;margin-right: -10%;">
+                                        <button type="button" onclick="btnremove(<?php print $row['id_mon'] ?>)" class="btn btn-danger" style="border-radius: 100%;margin-top: -18%;margin-right: -10%;">
                                             <i class="fa fa-pencil"></i>
                                         </button>
                             		</div>
 
+
                              <div id="formsave" class="block-content" style="margin-top: -5%;margin-bottom: -5%;color: #fff">
                             	 <div class="form-group row">
                                     <div class="col-12">
-                                    	<label>test</label>
+                                    	<label><?php print $row['Title'] ?></label>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-6">
-                                    	<label>location</label>
+                                    	<label><?php print $row['Location'] ?></label>
                                     </div>
                                 </div>
                                 <div class="form-group row" style="margin-bottom: 46%">
                                     <div class="col-12">
-                                    	<label>description</label>
+                                    	<label><?php print $row['Description'] ?></label>
                                     </div>
                                 </div>
                                 <div class="form-group row text-center">
                                     <div class="col-6">
-                                    	<label>20$</label>
+                                    	<label><?php print $row['Prix'] ?>$</label>
                                     </div>
                                     <div class="col-6">
-                                    	<label>4</label>
+                                    	<label><?php print $row['Nombre_copie'] ?></label>
                                     </div>
                                 </div>
                             </div>
@@ -207,42 +293,49 @@
                             <div id="formedit" class="block-content" style="margin-top: -5%;margin-bottom: -5%;">
                             	 <div class="form-group row">
                                     <div class="col-12">
-                                        <input type="text" class="form-control" id="Nom" name="Nom" placeholder="Nom">
+                                        <input type="text" class="form-control" name="Title" placeholder="Title" value="<?php print $row['Title'] ?>">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-6">
-                                        <input type="text" class="form-control" id="location" name="location" placeholder="Location">
+                                        <input type="text" class="form-control" name="Location" placeholder="Location" value="<?php print $row['Location'] ?>">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-12">
-                                    	<textarea class="form-control" rows="4" id="desc" name="desc" placeholder="Description"></textarea>
+                                    	<textarea class="form-control" rows="4" name="Description" placeholder="Description"><?php print $row['Description'] ?></textarea>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                             <div class="col-12 text-left push">
-                                            	<input type="file" id="file" class="form-control">
+                                            	<input type="file" class="form-control" name="fileToUpload">
+                                                <input type="hidden" name="oldfile" value="<?php print $row['Image'] ?>">
                                             </div>
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-6">
-                                        <input type="text" class="form-control" id="prix" name="prix" placeholder="Prix">
+                                        <input type="text" class="form-control" name="Prix" placeholder="Prix" value="<?php print $row['Prix'] ?>">
                                     </div>
                                     <div class="col-6">
-                                        <input type="number" class="form-control" id="nmbcomp" name="nmbcomp" placeholder="Nombre copie">
+                                        <input type="number" class="form-control" name="Nombre_copie" placeholder="Nombre copie" value="<?php print $row['Nombre_copie'] ?>">
                                     </div>
                                 </div>
                             </div>
+
+                            </div>
                         </div>
-                    	</form>
-					</div>
-					</div>
-					<!-- fin form store-->
+                        </form>                    
+                    </div>
+                    <!-- fin form store-->
+
+<?php
+                   }
+                   Database::disconnect();
+                    ?>
+
+
 
 					</div>
-
-				
 				</div>
                
 			   <div role="tabpanel" class="tab-pane" role="tabpanel" id="Users">
@@ -257,6 +350,33 @@
 			</div>
 			</div>
 			</div>
+		</div>
+
+
+
+		<!-- Modal -->
+		<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLabel">Delet Art</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		        Do you want to delet this record !
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		        <button type="button" id="savedelet" class="btn btn-danger">Delet</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+
+
+
 
 	<script type="text/javascript">
 		
@@ -267,7 +387,17 @@
 		    });
 		});
 
-		$("#forminsert").hide();
+        var test = "<?php echo @$test; ?>" + "T";
+
+        console.log(test);
+
+        if(test == "T"){
+            $("#forminsert").hide();
+        }else{
+            $("#formstandar").hide();
+        }
+
+		//$("#forminsert").hide();
 			function change(){
 				$("#formstandar").hide();
 				$("#forminsert").show();
@@ -277,6 +407,7 @@
 		//edite art	
 			$("#btnsuccess").hide();
 			$("#formedit").hide();
+
 		function btnedit(){
 			$("#btnwarning").hide();
 			$("#btnsuccess").show();
@@ -292,11 +423,40 @@
 			$("#formedit").hide();
 		}
 
-		//delet art 
-		function btnremove(){
+		//save change
 
+		function savechange(id){
+			var ur = 'editestore.php?id='+id;
+                $('#showdata').attr('action', ur);
+                $('#showdata').submit();
 		}
+
+		//delet art 
+
+		function btnremove(id){
+
+			$("#exampleModal").modal();
+			
+			$('#savedelet').click(function () {
+
+				var ur = 'deletstore.php?id='+id;
+                $('#showdata').attr('action', ur);
+                $('#showdata').submit();    
+
+			});
+		}
+
+
 
 	</script>    					
 </body>
 </html>
+
+<?php 
+
+}else{
+
+header("location: login.php");
+ 
+}
+ ?>
