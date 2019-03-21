@@ -66,7 +66,7 @@
                                     <div class="block-header bg-gd-dusk">
                                         <div class="row mb-3">
                                             <div class="col-12 text-center push" style="margin-bottom: 10%;margin-top: 2%;">
-                                            	<img src="<?php print $row['Image'] ?>" style="width: 50%;height: 120%;border-radius: 50%;margin-bottom: 0%;">
+                                            	<img src="<?php print $row['Image'] ?>" style="width: 50%;height: 140%;border-radius: 50%;margin-bottom: 0%;">
                                             </div>
                                         </div>
                                     </div>

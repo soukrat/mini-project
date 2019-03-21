@@ -167,15 +167,15 @@ if (!empty($_SESSION)) {
 		        </ul>
 		
 
-		<div class="col-md-11">
+		<div class="col-md-11 mb-5">
 		<div class="tab-content">
                                      
 				    <div role="tabpanel" class="tab-pane active" role="tabpanel" id="Store">
 
 				    <div class="row">
 
-				    	<div id="formstandar" class="col-4" style="margin-top: 2%;">
-				    	<div class="shadow p-3 mb-5 rounded" style="background-color: #28a745;">
+				    	<div id="formstandar" class="col-md-4" style="margin-top: 2%;">
+				    	<div class="shadow p-3 rounded" style="background-color: #28a745;">
 				    		<div class="form-group row mb-3">
                                 <div class="col-12 text-center push" style="margin-top: 35%;margin-bottom: 35%;">
                                     <button type="button" onclick="change()" class="btn btn-info" style="padding-left: 10%;padding-right: 10%;border: 1px solid;">
@@ -186,7 +186,7 @@ if (!empty($_SESSION)) {
 				    	</div>
 				    	</div>
 
-				    <div  id="forminsert" class="col-4" style="margin-top: 2%;">
+				    <div  id="forminsert" class="col-md-4" style="margin-top: 2%;">
 					<div class="shadow p-3 mb-5 rounded" style="background-color: rgb(248, 249, 250);">
 						<form class="" method="POST" action="" enctype="multipart/form-data">
                         <div class="block block-themed block-rounded block-shadow">
@@ -243,18 +243,18 @@ if (!empty($_SESSION)) {
 
 
 					<!-- form store -->
-					<div class="col-4" style="margin-top: 2%;">
+					<div class="col-md-4" style="margin-top: 2%;">
 					
 						<form id="showdata" method="POST" action="" enctype="multipart/form-data">
-                            <div class="shadow p-3 rounded" style="background-image: url('<?php print $row['Image'] ?>');background-size: 140%; background-repeat: no-repeat;">
+                            <div class="shadow p-3 rounded" style="background-image: url('<?php print $row['Image'] ?>');background-size: 170%; background-repeat: no-repeat;">
                         <div class="block block-themed block-rounded block-shadow">
           
                                     <div class="text-right">
-                                        <button type="button" id="btnwarning" onclick="btnedit()" class="btn btn-warning" style="border-radius: 100%;margin-top: -18%;">
+                                        <button type="button" id="<?php print $row['id_mon'] ?>btnwarning" onclick="btnedit(<?php print $row['id_mon'] ?>)" class="btn btn-warning" style="border-radius: 100%;margin-top: -18%;">
                                             <i class="fa fa-pencil"></i>
                                         </button>
                                      
-                                        <button type="button" onclick="savechange(<?php print $row['id_mon'] ?>)" id="btnsuccess" class="btn btn-success" style="border-radius: 100%;margin-top: -18%; ">
+                                        <button type="button" onclick="savechange(<?php print $row['id_mon'] ?>)" id="<?php print $row['id_mon'] ?>btnsuccess" class="btn btn-success" style="display: none; border-radius: 100%;margin-top: -18%; ">
                                             <i class="fa fa-check"></i>
                                         </button>
 
@@ -264,7 +264,7 @@ if (!empty($_SESSION)) {
                             		</div>
 
 
-                             <div id="formsave" class="block-content" style="margin-top: -5%;margin-bottom: -5%;color: #fff">
+                             <div id="<?php print $row['id_mon'] ?>formsave" class="block-content" style="margin-top: -5%;margin-bottom: -5%;color: #fff">
                             	 <div class="form-group row">
                                     <div class="col-12">
                                     	<label><?php print $row['Title'] ?></label>
@@ -290,7 +290,7 @@ if (!empty($_SESSION)) {
                                 </div>
                             </div>
 
-                            <div id="formedit" class="block-content" style="margin-top: -5%;margin-bottom: -5%;">
+                            <div id="<?php print $row['id_mon'] ?>formedit" class="block-content" style="display: none; margin-top: -5%;margin-bottom: -5%;">
                             	 <div class="form-group row">
                                     <div class="col-12">
                                         <input type="text" class="form-control" name="Title" placeholder="Title" value="<?php print $row['Title'] ?>">
@@ -389,7 +389,6 @@ if (!empty($_SESSION)) {
 
         var test = "<?php echo @$test; ?>" + "T";
 
-        console.log(test);
 
         if(test == "T"){
             $("#forminsert").hide();
@@ -405,23 +404,13 @@ if (!empty($_SESSION)) {
 
 
 		//edite art	
-			$("#btnsuccess").hide();
-			$("#formedit").hide();
 
-		function btnedit(){
-			$("#btnwarning").hide();
-			$("#btnsuccess").show();
-			$("#formsave").hide();
-			$("#formedit").show();
+		function btnedit(id){
+			$("#"+id+"btnwarning").hide();
+			$("#"+id+"btnsuccess").show();
+			$("#"+id+"formsave").hide();
+			$("#"+id+"formedit").show();
 		}		
-
-		//save art
-		function btnsave(){
-			$("#btnwarning").show();
-			$("#btnsuccess").hide();
-			$("#formsave").show();
-			$("#formedit").hide();
-		}
 
 		//save change
 
